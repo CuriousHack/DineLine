@@ -4,12 +4,19 @@ const router = express.Router();
 const { getSession } = require('../utils/sessionStore');
 
 const menuItems = {
-  1: "Jollof Rice",
-  2: "Fried Rice",
-  3: "Chicken",
-  4: "Beef",
-  5: "Coke",
-  6: "Water"
+  1: { name: "Jollof Rice", price: 1500 },
+  2: { name: "Fried Rice", price: 1500 },
+  3: { name: "Chicken", price: 1200 },
+  4: { name: "Beef", price: 1000 },
+  5: { name: "Coke", price: 500 },
+  6: { name: "Water", price: 300 }
+};
+
+const timeSlots = {
+  1: "12:00 PM",
+  2: "3:00 PM",
+  3: "6:00 PM",
+  4: "9:00 PM"
 };
 
 router.post('/', (req, res) => {
@@ -17,21 +24,46 @@ router.post('/', (req, res) => {
   const session = getSession(sessionId);
   const response = [];
 
+  // If user is in time selection mode
+  if (session.awaitingTimeSelection) {
+    if (timeSlots[message]) {
+      session.scheduledTime = timeSlots[message];
+      session.awaitingTimeSelection = false;
+      const total = session.currentOrder.reduce((sum, item) => sum + item.price, 0);
+      response.push(`Order scheduled for ${session.scheduledTime}.`);
+      response.push(`Your total is ₦${total}. Click "Pay Now" to complete payment.`);
+
+      return res.json({ 
+        messages: response,
+        paymentRequired: true,
+        amount: total * 100, // kobo
+        email: "test@example.com", // fake test email
+        sessionId
+      });
+    } else {
+      response.push("Invalid option. Please select a time slot:");
+      for (const key in timeSlots) {
+        response.push(`${key} - ${timeSlots[key]}`);
+      }
+      return res.json({ messages: response });
+    }
+  }
+
   switch (message) {
     case "1":
       response.push("Select an item number to add to your order:");
       for (const key in menuItems) {
-        response.push(`${key}: ${menuItems[key]}`);
+        response.push(`${key}: ${menuItems[key].name} - ₦${menuItems[key].price}`);
       }
       break;
 
     case "99":
       if (session.currentOrder.length) {
-        session.orderHistory.push([...session.currentOrder]);
-        session.currentOrder = [];
-        response.push("Order placed successfully! ✅");
-        response.push("Would you like to place a new order? Type 1.");
-        // Here, you would normally initiate payment
+        session.awaitingTimeSelection = true;
+        response.push("Please select a time slot for your order:");
+        for (const key in timeSlots) {
+          response.push(`${key} - ${timeSlots[key]}`);
+        }
       } else {
         response.push("No order to place.");
       }
@@ -41,7 +73,7 @@ router.post('/', (req, res) => {
       if (session.orderHistory.length) {
         response.push("Your Order History:");
         session.orderHistory.forEach((order, idx) => {
-          response.push(`Order ${idx + 1}: ${order.join(", ")}`);
+          response.push(`Order ${idx + 1}: ${order.items.map(i => i.name).join(", ")} at ${order.time}`);
         });
       } else {
         response.push("No order history found.");
@@ -51,7 +83,7 @@ router.post('/', (req, res) => {
     case "97":
       if (session.currentOrder.length) {
         response.push("Current Order:");
-        response.push(session.currentOrder.join(", "));
+        response.push(session.currentOrder.map(i => i.name).join(", "));
       } else {
         response.push("No current order.");
       }
@@ -60,6 +92,7 @@ router.post('/', (req, res) => {
     case "0":
       if (session.currentOrder.length) {
         session.currentOrder = [];
+        session.scheduledTime = null;
         response.push("Order cancelled.");
       } else {
         response.push("No order to cancel.");
@@ -67,10 +100,9 @@ router.post('/', (req, res) => {
       break;
 
     default:
-      // Check if message corresponds to a menu item
       if (menuItems[message]) {
         session.currentOrder.push(menuItems[message]);
-        response.push(`${menuItems[message]} added to your order.`);
+        response.push(`${menuItems[message].name} added to your order.`);
       } else {
         response.push("Invalid option. Please choose:");
         response.push("1 - Place order");
@@ -80,6 +112,16 @@ router.post('/', (req, res) => {
         response.push("0 - Cancel order");
       }
       break;
+  }
+
+  if (message === 'FINALIZE_ORDER') {
+    session.orderHistory.push({
+      items: [...session.currentOrder],
+      time: session.scheduledTime
+    });
+    session.currentOrder = [];
+    session.scheduledTime = null;
+    return res.json({ messages: [] });
   }
 
   res.json({ messages: response });
