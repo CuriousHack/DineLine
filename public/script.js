@@ -1,4 +1,5 @@
 const chatBox = document.getElementById('chat-box');
+
 const userInput = document.getElementById('user-input');
 const sessionId = localStorage.getItem('sessionId') || generateSessionId();
 
@@ -9,10 +10,30 @@ function generateSessionId() {
 }
 
 function appendMessage(sender, text) {
-  const message = document.createElement('div');
-  message.innerText = `${sender}: ${text}`;
-  chatBox.appendChild(message);
+  const messageDiv = document.createElement('div');
+  messageDiv.classList.add('message');
+  const senderDiv = document.createElement('div');
+  const textDiv = document.createElement('div');
+
+  senderDiv.classList.add('sender');
+  textDiv.classList.add('text');
+
+  textDiv.innerText = text;
+  senderDiv.innerText = sender;
+
+  if (sender === 'You') {
+    messageDiv.classList.add('right');
+  } else {
+    messageDiv.classList.add('left');
+  }
+
+  messageDiv.appendChild(senderDiv);
+  messageDiv.appendChild(textDiv);
+
+  chatBox.appendChild(messageDiv);
   chatBox.scrollTop = chatBox.scrollHeight;
+
+  return messageDiv;
 }
 
 async function sendMessage() {
@@ -32,7 +53,6 @@ async function sendMessage() {
   data.messages.forEach(msg => appendMessage('Bot', msg));
 }
 
-// Initial bot message
 window.onload = () => {
   fetch('/chat', {
     method: 'POST',
@@ -58,15 +78,17 @@ async function sendMessage() {
   });
 
   const data = await res.json();
-  data.messages.forEach(msg => appendMessage('Bot', msg));
+  data.messages.forEach((msg) => {
+    const messageDiv = appendMessage('Bot', msg);
 
-  if (data.paymentRequired) {
-    const payButton = document.createElement('button');
-    payButton.innerText = 'Pay Now';
-    data.email = 'akandelateef0@gmail.com';
-    payButton.onclick = () => payWithPaystack(data.amount, data.email);
-    chatBox.appendChild(payButton);
-  }
+    if (data.paymentRequired) {
+      const payButton = document.createElement('button');
+      payButton.innerText = 'Pay Now';
+      data.email = 'akandelateef0@gmail.com';
+      payButton.onclick = () => payWithPaystack(data.amount, data.email);
+      messageDiv.appendChild(payButton);
+    }
+  })
 }
 
 function payWithPaystack(amount, email) {

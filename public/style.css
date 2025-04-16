@@ -38,4 +38,34 @@ body {
     border: none;
     border-radius: 4px;
   }
+
+  .message {
+    max-width: 70%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    clear: both;
+  }
+  
+  .message .sender {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .message .text {
+    word-wrap: break-word;
+  }
+  
+  .message.left {
+    background-color: #f1f0f0;
+    float: left;
+    text-align: left;
+  }
+  
+  .message.right {
+    background-color: #dcf8c6;
+    float: right;
+    text-align: right;
+  }
+  
   
