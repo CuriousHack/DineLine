@@ -1,4 +1,3 @@
-// utils/sessionStore.js
 const sessions = {};
 
 const getSession = (sessionId) => {
