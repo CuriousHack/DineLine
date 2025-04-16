@@ -26,6 +26,11 @@ router.post('/', (req, res) => {
   const items = [];
   const time = [];
 
+  if (!message || message.trim() === '') {
+    response.push("Welcome! Please choose an option: \n1 - Place order \n99 - Checkout \n98 - Order history \n97 - Current order \n0 - Cancel order");
+    return res.json({ messages: response });
+  }
+
   // If user is in time selection mode
   if (session.awaitingTimeSelection) {
     if (timeSlots[message]) {
@@ -107,8 +112,7 @@ router.post('/', (req, res) => {
         session.currentOrder.push(menuItems[message]);
         response.push(`${menuItems[message].name} added to your order.`);
       } else {
-        response.push("Invalid option. Please choose:");                                                                                                                                                                                                                                 
-        response.push("1 - Place order \n 99 - Checkout \n 98 - Order history \n 97 - Current order \n 0 - Cancel order");
+        response.push("Invalid option. Please choose: \n 1 - Place order \n 99 - Checkout \n 98 - Order history \n 97 - Current order \n 0 - Cancel order");
       }
       break;
   }
