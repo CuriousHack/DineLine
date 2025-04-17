@@ -1,21 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Restaurant ChatBot</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://js.paystack.co/v1/inline.js"></script>
-
+  <title>DineLine</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="chat-container">
-    <div id="chat-box">
+    <div id="splash">
+        <div class="splash-content">
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="white" viewBox="0 0 24 24">
+            <path d="M7.25 2a.75.75 0 01.75.75V10a.5.5 0 001 0V2.75a.75.75 0 011.5 0V10a2 2 0 01-3.5 1.41V2.75A.75.75 0 017.25 2zM16 2a.5.5 0 00-1 0v5.5H14V2a.5.5 0 00-1 0v6.5a2 2 0 003 1.732V2zM12 22a1 1 0 100-2 1 1 0 000 2zm-6 0a1 1 0 100-2 1 1 0 000 2z"/>
+          </svg>
+          <h1>DineLine</h1>
+          <p class="splash-credit">Created with ❤️ by Akande Lateef</p>
+        </div>
+    </div>
       
-    </div>
-    <div class="input-container">
-      <input type="text" id="user-input" placeholder="Type your message..." />
-      <button onclick="sendMessage()">Send</button>
-    </div>
+      
+  <div class="container">
+    <aside class="sidebar">
+        <div class="logo">
+          <!-- SVG Icon: Fork & Knife in a Circle -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 24 24">
+            <path d="M7.25 2a.75.75 0 01.75.75V10a.5.5 0 001 0V2.75a.75.75 0 011.5 0V10a2 2 0 01-3.5 1.41V2.75A.75.75 0 017.25 2zM16 2a.5.5 0 00-1 0v5.5H14V2a.5.5 0 00-1 0v6.5a2 2 0 003 1.732V2zM12 22a1 1 0 100-2 1 1 0 000 2zm-6 0a1 1 0 100-2 1 1 0 000 2z"/>
+          </svg>
+        </div>
+        <h1 class="title">DineLine</h1>
+      </aside>
+
+    <main class="chat-window">
+        <div class="mobile-title">
+            <div class="mobile-logo">
+              <!-- SVG Logo -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
+                <path d="M7.25 2a.75.75 0 01.75.75V10a.5.5 0 001 0V2.75a.75.75 0 011.5 0V10a2 2 0 01-3.5 1.41V2.75A.75.75 0 017.25 2zM16 2a.5.5 0 00-1 0v5.5H14V2a.5.5 0 00-1 0v6.5a2 2 0 003 1.732V2zM12 22a1 1 0 100-2 1 1 0 000 2zm-6 0a1 1 0 100-2 1 1 0 000 2z"/>
+              </svg>
+            </div>
+            <span class="mobile-text">DineLine</span>
+          </div>
+
+      <div class="messages" id="chat-box">
+        
+      </div>
+
+      <div class="input-area" >
+        <input type="text" id="user-input" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+
+      <!-- <footer class="footer">
+        Created with love by Akande Lateef ❤️
+      </footer> -->
+    </main>
   </div>
   <script src="script.js"></script>
 </body>

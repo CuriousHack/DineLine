@@ -11,20 +11,20 @@ function generateSessionId() {
 
 function appendMessage(sender, text) {
   const messageDiv = document.createElement('div');
+  const senderDiv = document.createElement('span');
+  const textDiv = document.createElement('p');
   messageDiv.classList.add('message');
-  const senderDiv = document.createElement('div');
-  const textDiv = document.createElement('div');
+  senderDiv.classList.add('sender')
 
-  senderDiv.classList.add('sender');
-  textDiv.classList.add('text');
+
 
   textDiv.innerText = text;
   senderDiv.innerText = sender;
 
   if (sender === 'You') {
-    messageDiv.classList.add('right');
+    messageDiv.classList.add('sent');
   } else {
-    messageDiv.classList.add('left');
+    messageDiv.classList.add('received');
   }
 
   messageDiv.appendChild(senderDiv);
@@ -83,6 +83,7 @@ async function sendMessage() {
 
     if (data.paymentRequired) {
       const payButton = document.createElement('button');
+      payButton.classList.add('pay-button');
       payButton.innerText = 'Pay Now';
       data.email = 'akandelateef0@gmail.com';
       payButton.onclick = () => payWithPaystack(data.amount, data.email);
