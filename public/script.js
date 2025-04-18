@@ -88,6 +88,7 @@ async function sendMessage() {
       data.email = 'akandelateef0@gmail.com';
       payButton.onclick = () => payWithPaystack(data.amount, data.email);
       messageDiv.appendChild(payButton);
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
   })
 }
@@ -112,7 +113,6 @@ function payWithPaystack(amount, email) {
       .then(data => {
           if (data.success) {
             appendMessage("DineLine🍽️", "✅ Payment verified! Your order has been placed.");
-           // showInvoice(data); // ← Show invoice
         } else {
           appendMessage("DineLine🍽️", "❌ Payment verification failed. Please try again.");
         }
@@ -137,25 +137,3 @@ function finalizeOrder() {
     body: JSON.stringify({ sessionId, message: 'FINALIZE_ORDER' })
   });
 }
-
-// function showInvoice({ reference, paymentMode, deliveryTime, total, items, dateTime }) {
-//   document.getElementById('invoice-date').innerText = dateTime;
-//   document.getElementById('invoice-ref').innerText = reference;
-//   document.getElementById('invoice-mode').innerText = paymentMode;
-//   document.getElementById('invoice-delivery').innerText = deliveryTime;
-//   document.getElementById('invoice-total').innerText = `₦${total}`;
-
-//   const itemsBody = document.getElementById('invoice-items');
-//   itemsBody.innerHTML = ''; // Clear existing
-
-//   items.forEach(item => {
-//     const row = document.createElement('tr');
-//     row.innerHTML = `
-//       <td>${item.name}</td>
-//       <td>₦${item.price}</td>
-//     `;
-//     itemsBody.appendChild(row);
-//   });
-
-//   document.getElementById('invoice-container').style.display = 'block';
-// }

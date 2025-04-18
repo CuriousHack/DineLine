@@ -1,7 +1,5 @@
 const express = require('express');
 const axios = require('axios');
-const dotenv = require('dotenv')
-dotenv.config();
 const router = express.Router();
 const { getSession } = require('../utils/sessionStore');
 
