@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
   <title>DineLine</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -56,6 +58,34 @@
       </footer> -->
     </main>
   </div>
+
+  <!-- <div id="invoice-container" style="display: none;">
+    <div id="invoice">
+      <h2>DineLine 🍽️ Invoice</h2>
+      <p><strong>Date:</strong> <span id="invoice-date"></span></p>
+      <p><strong>Transaction Ref:</strong> <span id="invoice-ref"></span></p>
+      <p><strong>Payment Mode:</strong> <span id="invoice-mode"></span></p>
+      <p><strong>Scheduled Delivery:</strong> <span id="invoice-delivery"></span></p>
+  
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>₦ Price</th>
+          </tr>
+        </thead>
+        <tbody id="invoice-items"></tbody>
+        <tfoot>
+          <tr>
+            <td><strong>Total</strong></td>
+            <td><strong id="invoice-total"></strong></td>
+          </tr>
+        </tfoot>
+      </table>
+      <button onclick="downloadInvoice()">📄 Download Invoice</button>
+    </div>
+  </div> -->
+  
   <script src="script.js"></script>
 </body>
 </html>

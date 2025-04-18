@@ -217,6 +217,59 @@ body, html {
   opacity: 0;
 }
 
+
+#invoice-container {
+  padding: 20px;
+  background: #fff;
+  color: #333;
+  font-family: 'Segoe UI', sans-serif;
+  max-width: 600px;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#invoice h2 {
+  text-align: center;
+  color: #ff5722; /* Accent color */
+}
+
+#invoice table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+#invoice table, #invoice th, #invoice td {
+  border: 1px solid #ddd;
+}
+
+#invoice th, #invoice td {
+  padding: 10px;
+  text-align: left;
+}
+
+#invoice th {
+  background-color: #f5f5f5;
+}
+
+#invoice button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #009688;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+}
+
+#invoice button:hover {
+  background-color: #00796b;
+}
+
+
+
 /* Animations */
 @keyframes fadeOut {
   to {

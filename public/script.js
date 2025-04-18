@@ -92,33 +92,6 @@ async function sendMessage() {
   })
 }
 
-// function payWithPaystack(amount, email) {
-//   var handler = PaystackPop.setup({
-//     key: 'pk_test_dcc0109f6861997db08f7fab25e57e71e94b4ddc', // replace with your public key
-//     email: email,
-//     amount: amount,
-//     currency: "NGN",
-//     callback: function(response) {
-//       // Send reference to backend for verification
-//       fetch('/verify-payment', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({ reference: response.reference, sessionId })
-//       }).then(res => res.json()).then(data => {
-//         if (data.success) {
-//           appendMessage("DineLine🍽️", "✅ Payment verified! Order placed.");
-//         } else {
-//           appendMessage("DineLine🍽️", "❌ Payment failed to verify.");
-//         }
-//       });
-//     }
-//     // onClose: function() {
-//     //   appendMessage("DineLine🍽️", "Payment cancelled.");
-//     // }
-//   });
-//   handler.openIframe();
-// }
-
 function payWithPaystack(amount, email) {
   var handler = PaystackPop.setup({
     key: 'pk_test_dcc0109f6861997db08f7fab25e57e71e94b4ddc',
@@ -137,9 +110,9 @@ function payWithPaystack(amount, email) {
       })
       .then(res => res.json())
       .then(data => {
-        if (data.success) {
-          appendMessage("DineLine🍽️", "✅ Payment verified! Your order has been placed.");
-          // Show invoice will be added later
+          if (data.success) {
+            appendMessage("DineLine🍽️", "✅ Payment verified! Your order has been placed.");
+           // showInvoice(data); // ← Show invoice
         } else {
           appendMessage("DineLine🍽️", "❌ Payment verification failed. Please try again.");
         }
@@ -164,3 +137,25 @@ function finalizeOrder() {
     body: JSON.stringify({ sessionId, message: 'FINALIZE_ORDER' })
   });
 }
+
+// function showInvoice({ reference, paymentMode, deliveryTime, total, items, dateTime }) {
+//   document.getElementById('invoice-date').innerText = dateTime;
+//   document.getElementById('invoice-ref').innerText = reference;
+//   document.getElementById('invoice-mode').innerText = paymentMode;
+//   document.getElementById('invoice-delivery').innerText = deliveryTime;
+//   document.getElementById('invoice-total').innerText = `₦${total}`;
+
+//   const itemsBody = document.getElementById('invoice-items');
+//   itemsBody.innerHTML = ''; // Clear existing
+
+//   items.forEach(item => {
+//     const row = document.createElement('tr');
+//     row.innerHTML = `
+//       <td>${item.name}</td>
+//       <td>₦${item.price}</td>
+//     `;
+//     itemsBody.appendChild(row);
+//   });
+
+//   document.getElementById('invoice-container').style.display = 'block';
+// }
