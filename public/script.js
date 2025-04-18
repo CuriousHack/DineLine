@@ -92,22 +92,70 @@ async function sendMessage() {
   })
 }
 
+// function payWithPaystack(amount, email) {
+//   var handler = PaystackPop.setup({
+//     key: 'pk_test_dcc0109f6861997db08f7fab25e57e71e94b4ddc', // replace with your public key
+//     email: email,
+//     amount: amount,
+//     currency: "NGN",
+//     callback: function(response) {
+//       // Send reference to backend for verification
+//       fetch('/verify-payment', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ reference: response.reference, sessionId })
+//       }).then(res => res.json()).then(data => {
+//         if (data.success) {
+//           appendMessage("DineLine🍽️", "✅ Payment verified! Order placed.");
+//         } else {
+//           appendMessage("DineLine🍽️", "❌ Payment failed to verify.");
+//         }
+//       });
+//     }
+//     // onClose: function() {
+//     //   appendMessage("DineLine🍽️", "Payment cancelled.");
+//     // }
+//   });
+//   handler.openIframe();
+// }
+
 function payWithPaystack(amount, email) {
   var handler = PaystackPop.setup({
-    key: 'pk_test_dcc0109f6861997db08f7fab25e57e71e94b4ddc', // replace with your public key
+    key: 'pk_test_dcc0109f6861997db08f7fab25e57e71e94b4ddc',
     email: email,
     amount: amount,
     currency: "NGN",
     callback: function(response) {
-      appendMessage("DineLine🍽️", "✅ Payment successful! Your order has been placed.");
-      finalizeOrder(); // Store order in history
+      // Send to backend for verification
+      fetch('chat/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reference: response.reference,
+          sessionId: sessionId
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          appendMessage("DineLine🍽️", "✅ Payment verified! Your order has been placed.");
+          // Show invoice will be added later
+        } else {
+          appendMessage("DineLine🍽️", "❌ Payment verification failed. Please try again.");
+        }
+      })
+      .catch(err => {
+        appendMessage("DineLine🍽️", "⚠️ Error verifying payment. Please try again.");
+      });
     },
     onClose: function() {
       appendMessage("DineLine🍽️", "Payment cancelled.");
     }
   });
+
   handler.openIframe();
 }
+
 
 function finalizeOrder() {
   fetch('/chat', {

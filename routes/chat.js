@@ -1,6 +1,11 @@
 const express = require('express');
+const axios = require('axios');
+const dotenv = require('dotenv')
+dotenv.config();
 const router = express.Router();
 const { getSession } = require('../utils/sessionStore');
+
+const SECRET_KEY = process.env.SECRET_KEY
 
 const menuItems = {
   2: { name: "Jollof Rice", price: 1500 },
@@ -110,7 +115,8 @@ router.post('/', (req, res) => {
     default:
       if (menuItems[message]) {
         session.currentOrder.push(menuItems[message]);
-        response.push(`${session.currentOrder.map(i => i.name).join(", \n")} \n Press 99 to cheeckout or keep adding to your order`)
+        const total = session.currentOrder.reduce((sum, item) => sum + item.price, 0);
+        response.push(`${session.currentOrder.map(i => i.name).join(", \n")} \nTotal is ${total} \n Press 99 to checkout or keep adding to your order`)
       } else {
         response.push("Invalid option. Please choose: \n 1 - Place order \n 99 - Checkout \n 98 - Order history \n 97 - Current order \n 0 - Cancel order");
       }
@@ -128,6 +134,56 @@ router.post('/', (req, res) => {
   }
 
   res.json({ messages: response });
+});
+
+router.post('/verify-payment', async (req, res) => {
+  const { reference, sessionId } = req.body;
+
+  try {
+    const response = await axios.get(`https://api.paystack.co/transaction/verify/${reference}`, {
+      headers: {
+        Authorization: `Bearer ${SECRET_KEY}`
+      }
+    });
+
+    const data = response.data;
+
+    if (data.status && data.data.status === "success") {
+      const session = getSession(sessionId);
+      const total = session.currentOrder.reduce((sum, item) => sum + item.price, 0);
+
+      if (data.data.amount !== total * 100) {
+        return res.json({ success: false, message: "Amount mismatch" });
+      }
+
+      // Store finalized order
+      session.orderHistory.push({
+        items: [...session.currentOrder],
+        time: session.scheduledTime,
+        paymentMode: data.data.channel,
+        reference: data.data.reference,
+        paidAt: data.data.paid_at
+      });
+
+      session.currentOrder = [];
+      session.scheduledTime = null;
+
+      return res.json({
+        success: true,
+        reference: data.data.reference,
+        paymentMode: data.data.channel,
+        deliveryTime: session.scheduledTime,
+        total: total,
+        items: session.orderHistory[session.orderHistory.length - 1].items,
+        dateTime: new Date().toLocaleString()
+      });
+    } else {
+      res.json({ success: false, message: "Payment not successful" });
+    }
+  } catch (err) {
+    console.error("Error verifying payment:", err.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
 module.exports = router;
