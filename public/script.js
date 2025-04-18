@@ -50,7 +50,7 @@ async function sendMessage() {
   });
 
   const data = await res.json();
-  data.messages.forEach(msg => appendMessage('Bot', msg));
+  data.messages.forEach(msg => appendMessage('DineLine🍽️', msg));
 }
 
 window.onload = () => {
@@ -60,7 +60,7 @@ window.onload = () => {
     body: JSON.stringify({ sessionId, message: '' })
   }).then(res => res.json())
     .then(data => {
-      data.messages.forEach(msg => appendMessage('Bot', msg));
+      data.messages.forEach(msg => appendMessage('DineLine🍽️', msg));
     });
 };
 
@@ -79,7 +79,7 @@ async function sendMessage() {
 
   const data = await res.json();
   data.messages.forEach((msg) => {
-    const messageDiv = appendMessage('Bot', msg);
+    const messageDiv = appendMessage('DineLine🍽️', msg);
 
     if (data.paymentRequired) {
       const payButton = document.createElement('button');
@@ -99,11 +99,11 @@ function payWithPaystack(amount, email) {
     amount: amount,
     currency: "NGN",
     callback: function(response) {
-      appendMessage("Bot", "✅ Payment successful! Your order has been placed.");
+      appendMessage("DineLine🍽️", "✅ Payment successful! Your order has been placed.");
       finalizeOrder(); // Store order in history
     },
     onClose: function() {
-      appendMessage("Bot", "Payment cancelled.");
+      appendMessage("DineLine🍽️", "Payment cancelled.");
     }
   });
   handler.openIframe();

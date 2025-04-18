@@ -91,7 +91,7 @@ router.post('/', (req, res) => {
 
     case "97":
       if (session.currentOrder.length) {
-        response.push(`Current Order: \n ${session.currentOrder.map(i => i.name).join(", ")}`);
+        response.push(`Current Order: \n ${session.currentOrder.map(i => i.name).join(", \n")}`);
       } else {
         response.push("No current order.");
       }
@@ -110,7 +110,7 @@ router.post('/', (req, res) => {
     default:
       if (menuItems[message]) {
         session.currentOrder.push(menuItems[message]);
-        response.push(`${menuItems[message].name} added to your order.`);
+        response.push(`${session.currentOrder.map(i => i.name).join(", \n")} \n Press 99 to cheeckout or keep adding to your order`)
       } else {
         response.push("Invalid option. Please choose: \n 1 - Place order \n 99 - Checkout \n 98 - Order history \n 97 - Current order \n 0 - Cancel order");
       }
